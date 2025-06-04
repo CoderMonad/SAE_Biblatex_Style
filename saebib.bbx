@@ -1,0 +1,134 @@
+%==========================
+\ProvidesFile{saebib.bbx}[2025/06/04 BibLaTeX bibliography style for SAE]
+
+\RequireBibliographyStyle{numeric}   % inherit numeric labels
+
+% ---------------------------------------------------------------
+% GENERAL SETTINGS
+% ---------------------------------------------------------------
+\DeclareNameAlias{default}{family-given}
+\ExecuteBibliographyOptions{giveninits=true}
+\DeclareFieldFormat{title}{\mkbibquote{#1}}    % quotation marks
+\DeclareFieldFormat{doi}{\mkbibacro{doi}\addcolon\space\href{https://doi.org/#1}{#1}}
+\renewcommand*{\newunitpunct}{\addcomma\space} % comma between units
+
+% ---------------------------------------------------------------
+% DRIVER: SAE TECHNICAL PAPER  (use @techreport or @report)
+% ---------------------------------------------------------------
+\DeclareBibliographyDriver{techreport}{%
+  \printnames{author}%
+  \setunit{\addcomma\space}%
+  \printfield{title}%
+  \setunit{\addcomma\space}%
+  \printtext{SAE Technical Paper}%
+  \addspace\printfield{number}%
+  \setunit{\addcomma\space}%
+  \printfield{year}%
+  \iffieldundef{doi}{}{\setunit{\addcomma\space}\printfield{doi}}%
+  \finentry}
+
+% ---------------------------------------------------------------
+% DRIVER: JOURNAL ARTICLE  (SAE & non‑SAE)
+% ---------------------------------------------------------------
+\DeclareBibliographyDriver{article}{%
+  \printnames{author}%
+  \setunit{\addcomma\space}%
+  \printfield{title}%
+  \setunit{\addcomma\space}%
+  % journal title + volume(issue):pages
+  \printfield{journaltitle}%
+  \setunit{\addspace}%
+  \printfield{volume}%
+  \iffieldundef{number}{}{(\printfield{number})}%
+  \iffieldundef{pages}{}{\addcolon\printfield{pages}}%
+  \setunit{\addcomma\space}%
+  \printfield{year}%
+  \iffieldundef{doi}{}{\setunit{\addcomma\space}\printfield{doi}}%
+  \finentry}
+
+% ---------------------------------------------------------------
+% DRIVER: CONFERENCE PAPER WITHOUT PAPER NUMBER
+% ---------------------------------------------------------------
+\DeclareBibliographyDriver{inproceedings}{%
+  \printnames{author}%
+  \setunit{\addcomma\space}%
+  \printfield{title}%
+  \setunit{\addcomma\space}%
+  \printtext{presented at}%
+  \addspace\printfield{eventtitle}%
+  \setunit{\addcomma\space}%
+  \printfield{location}%
+  \setunit{\addcomma\space}%
+  \printfield{eventdate}%
+  \finentry}
+
+% ---------------------------------------------------------------
+% DRIVER: BOOK
+% ---------------------------------------------------------------
+\DeclareBibliographyDriver{book}{%
+  \printnames{author}%
+  \setunit{\addcomma\space}%
+  \printfield{title}%
+  \setunit{\addcomma\space}%
+  \printlist{publisher}%
+  \setunit{\addcomma\space}%
+  \printfield{year}%
+  \iffieldundef{doi}{\iffieldundef{isbn}{}{\setunit{\addcomma\space}\printfield{isbn}}}%
+    {\setunit{\addcomma\space}\printfield{doi}}%
+  \finentry}
+
+% ---------------------------------------------------------------
+% DRIVER: THESIS / DISSERTATION
+% ---------------------------------------------------------------
+\DeclareBibliographyDriver{thesis}{%
+  \printnames{author}%
+  \setunit{\addcomma\space}%
+  \printfield{title}%
+  \setunit{\addcomma\space}%
+  \printfield{type}%
+  \addcomma\space
+  \printfield{institution}%
+  \setunit{\addcomma\space}%
+  \printfield{year}%
+  \finentry}
+
+% ---------------------------------------------------------------
+% DRIVER: ONLINE SOURCE
+% ---------------------------------------------------------------
+\DeclareBibliographyDriver{online}{%
+  \printnames{author}%
+  \setunit{\addcomma\space}%
+  \printfield{title}%
+  \setunit{\addcomma\space}%
+  \printfield{url}%
+  \setunit{\addcomma\space}%
+  \printfield{urldate}%
+  \finentry}
+
+% ---------------------------------------------------------------
+% DRIVER: PATENT
+% ---------------------------------------------------------------
+\DeclareBibliographyDriver{patent}{%
+  \printnames{author}%
+  \setunit{\addcomma\space}%
+  \printfield{title}%
+  \setunit{\addcomma\space}%
+  \printfield{number}%
+  \setunit{\addcomma\space}%
+  \printfield{day}\addspace\printfield{month}\addspace\printfield{year}%
+  \finentry}
+
+% ---------------------------------------------------------------
+% FALLBACK FOR MISC
+% ---------------------------------------------------------------
+\DeclareBibliographyDriver{misc}{%
+  \printnames{author}%
+  \setunit{\addcomma\space}%
+  \printfield{title}%
+  \setunit{\addcomma\space}%
+  \printlist{howpublished}%
+  \setunit{\addcomma\space}%
+  \printfield{year}%
+  \finentry}
+
+% =======================
