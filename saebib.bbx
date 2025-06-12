@@ -1,5 +1,5 @@
-%==========================
-\ProvidesFile{saebib.bbx}[2025/06/04 BibLaTeX bibliography style for SAE]
+%==========================  sae.bbx  ==========================
+\ProvidesFile{saebib.bbx}[2025/06/12 BibLaTeX bibliography style for SAE]
 
 \RequireBibliographyStyle{numeric}   % inherit numeric labels
 
@@ -117,7 +117,54 @@
   \setunit{\addcomma\space}%
   \printfield{day}\addspace\printfield{month}\addspace\printfield{year}%
   \finentry}
-
+% ---------------------------------------------------------------
+% DRIVER: JURISDICTION  (laws, statutes, regulations)
+% ---------------------------------------------------------------
+\DeclareBibliographyDriver{jurisdiction}{%
+  %––––– Issuing body –––––
+  \ifnameundef{author}
+    {\printlist{institution}}% e.g. “National Highway Traffic Safety Administration”
+    {\printnames{author}}%   Fallback if you *do* store an author
+  \setunit{\addcomma\space}%
+  %––––– Title of the act / regulation –––––
+  \printfield{title}% (inherits quotation marks from global \DeclareFieldFormat{title})
+  %––––– Code / section / type identifier –––––
+  \iffieldundef{type}{}{%
+    \setunit{\addcomma\space}\printfield{type}}% e.g. “49 CFR §571.208”
+  \iffieldundef{number}{}{%
+    \addcomma\space\printfield{number}}% docket or bill number if present
+  %––––– Geographic or political jurisdiction –––––
+  \iffieldundef{location}{}{%
+    \setunit{\addcomma\space}\printfield{location}}% e.g. “Washington, DC”
+  %––––– Year –––––
+  \setunit{\addcomma\space}\printfield{year}%
+  %––––– Persistent identifier –––––
+  \iffieldundef{url}%
+    {\iffieldundef{doi}{}{\setunit{\addcomma\space}\printfield{doi}}}%
+    {\setunit{\addcomma\space}\printfield{url}%
+     \iffieldundef{urldate}{}{\addspace(Accessed:\space\printfield{urldate})}}%
+  \finentry}
+% ---------------------------------------------------------------
+% DRIVER: COURT CASE  (entrytype = @case)
+% ---------------------------------------------------------------
+\DeclareBibliographyDriver{case}{%
+  % –––– Case name ––––
+  \printfield{title}%
+  % –––– Reporter citation ––––
+  \iffieldundef{volume}{}{%
+    \setunit{\addcomma\space}\printfield{volume}}%
+  \iffieldundef{journaltitle}{}{%
+    \addspace\printfield{journaltitle}}%
+  \iffieldundef{pages}{}{%
+    \addspace\printfield{pages}}%
+  % –––– Court / Circuit ––––
+  \iffieldundef{court}{}{%
+    \addspace\printfield{court}}%
+  % –––– Year ––––
+  \setunit{\addspace}%
+  \printfield{year}%
+  \finentry}
+% ================== end of court-case driver ===================
 % ---------------------------------------------------------------
 % FALLBACK FOR MISC
 % ---------------------------------------------------------------
@@ -131,4 +178,4 @@
   \printfield{year}%
   \finentry}
 
-% =======================
+% =======================  end of sae.bbx  ======================
