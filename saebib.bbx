@@ -1,8 +1,6 @@
 %==========================  sae.bbx  ==========================
-\ProvidesFile{saebib.bbx}[2025/06/12 BibLaTeX bibliography style for SAE]
-
+\ProvidesFile{saebib.bbx}[2025/08/07 BibLaTeX bibliography style for SAE]
 \RequireBibliographyStyle{numeric}   % inherit numeric labels
-
 % ---------------------------------------------------------------
 % GENERAL SETTINGS
 % ---------------------------------------------------------------
@@ -166,6 +164,45 @@
   \finentry}
 % ================== end of court-case driver ===================
 % ---------------------------------------------------------------
+% DRIVER: STANDARD  (ISO / SAE / IEEE standards)
+% Expected fields:
+%   organization or institution  – issuing body (SAE International, ISO, …)
+%   title                        – standard title
+%   type                         – standard series/label (e.g., SAE Standard, ISO)
+%   number                       – document number (e.g., J3016_202104, ISO 26262-1:2018)
+%   version / edition            – optional
+%   year (or date)               – publication year/date
+%   doi / url (+ urldate)        – optional persistent identifier
+% ---------------------------------------------------------------
+\DeclareBibliographyDriver{standard}{%
+% –––– Issuer ––––
+\ifnameundef{author}
+{\iffieldundef{organization}
+{\printlist{institution}}
+{\printlist{organization}}}
+{\printnames{author}}%
+\setunit{\addcomma\space}%
+% –––– Title ––––
+\printfield{title}%
+% –––– Series label and document number ––––
+\iffieldundef{type}
+{\setunit{\addcomma\space}\printtext{Standard}}% default label if 'type' missing
+{\setunit{\addcomma\space}\printfield{type}}%
+\iffieldundef{number}{}{\addspace\printfield{number}}%
+% –––– Version / Edition (optional) ––––
+\iffieldundef{version}{}{\setunit{\addcomma\space}\printfield{version}}%
+\iffieldundef{edition}{}{\setunit{\addcomma\space}\printfield{edition}}%
+% –––– Year ––––
+\setunit{\addcomma\space}%
+\iffieldundef{year}{\printdate}{\printfield{year}}%
+% –––– DOI or URL ––––
+\iffieldundef{doi}
+{\iffieldundef{url}{}{\setunit{\addcomma\space}\printfield{url}%
+\iffieldundef{urldate}{}{\addspace(Accessed:\space\printfield{urldate})}}}
+{\setunit{\addcomma\space}\printfield{doi}}%
+\finentry}
+% ================== end of standard driver =====================
+% ---------------------------------------------------------------
 % FALLBACK FOR MISC
 % ---------------------------------------------------------------
 \DeclareBibliographyDriver{misc}{%
@@ -177,5 +214,4 @@
   \setunit{\addcomma\space}%
   \printfield{year}%
   \finentry}
-
 % =======================  end of sae.bbx  ======================
